@@ -1,4 +1,4 @@
-use std::{fmt::Debug, str::FromStr};
+use advent_of_code::{match_pat, parse_number};
 
 advent_of_code::solution!(3);
 
@@ -47,7 +47,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     Some(solve(input, 0))
 }
 
-fn parse_mul(input: &str) -> Result<(&str, u32, u32), &str> {
+pub fn parse_mul(input: &str) -> Result<(&str, u32, u32), &str> {
     let input = match_pat(input, "(")?;
     let (input, num1) = parse_number::<u32>(input)?;
     let input = match_pat(input, ",")?;
@@ -55,31 +55,6 @@ fn parse_mul(input: &str) -> Result<(&str, u32, u32), &str> {
     let input = match_pat(input, ")")?;
 
     Ok((input, num1, num2))
-}
-
-fn parse_number<T>(input: &str) -> Result<(&str, T), &str>
-where
-    T: FromStr,
-    T::Err: Debug,
-{
-    let mut curr = 0;
-    while input.as_bytes()[curr].is_ascii_digit() {
-        curr += 1;
-    }
-
-    if curr == 0 {
-        return Err(input);
-    }
-
-    Ok((&input[curr..], input[..curr].parse().unwrap()))
-}
-
-fn match_pat<'input>(input: &'input str, pat: &str) -> Result<&'input str, &'input str> {
-    if !input.starts_with(pat) {
-        return Err(input);
-    }
-
-    Ok(&input[pat.len()..])
 }
 
 #[cfg(test)]
